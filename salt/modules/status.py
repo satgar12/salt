@@ -87,7 +87,11 @@ def _get_boot_time_aix():
         raise CommandExecutionError('Unable to find boot_time for pid 1.')
     bt_time = res['stdout']
     days = bt_time.split('-')
-    hms = days[1].split(':')
+    try:
+        hms = days[1].split(':')
+    except IndexError:
+        hms = days[0].split(':')
+        days[0] = "0"
     boot_secs = _number(days[0]) * 86400 + _number(hms[0]) * 3600 + _number(hms[1]) * 60 + _number(hms[2])
     return boot_secs
 
